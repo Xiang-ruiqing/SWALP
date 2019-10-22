@@ -40,8 +40,8 @@ def train_batch(epoch, batch_idx, loss_sum, correct, ttl,
                 quantize_momentum=True):
     batch_size = input.shape[0]
 
-    input = input.cuda(async=True)
-    target = target.cuda(async=True)
+    input = input.cuda(non_blocking=True)
+    target = target.cuda(non_blocking=True)
     input_var = torch.autograd.Variable(input)
     target_var = torch.autograd.Variable(target)
 
@@ -123,8 +123,8 @@ def eval(loader, model, criterion):
     cnt = 0
     with torch.no_grad():
         for i, (input, target) in enumerate(loader):
-            input = input.cuda(async=True)
-            target = target.cuda(async=True)
+            input = input.cuda(non_blocking=True)
+            target = target.cuda(non_blocking=True)
             input_var = torch.autograd.Variable(input)
             target_var = torch.autograd.Variable(target)
 
@@ -193,7 +193,7 @@ def bn_update(loader, model):
     model.apply(lambda module: _get_momenta(module, momenta))
     n = 0
     for input, _ in loader:
-        input = input.cuda(async=True)
+        input = input.cuda(non_blocking=True)
         input_var = torch.autograd.Variable(input)
         b = input_var.data.size(0)
 
